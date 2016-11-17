@@ -2,7 +2,9 @@
 <resources>
 
     <string name="app_name">Sunshine</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="today">Today,June 24</string>
+    <string name="max_temp">21º</string>
+    <string name="min_temp">8</string>
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
