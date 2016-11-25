@@ -1,4 +1,4 @@
-package com.example.android.sunshine.app.sync;
+package com.alberto.app.sync;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
