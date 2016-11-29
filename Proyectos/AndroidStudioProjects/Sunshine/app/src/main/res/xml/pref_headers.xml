@@ -5,7 +5,7 @@
     <header
         android:fragment="com.alberto.sunshine.SettingsActivity$GeneralPreferenceFragment"
         android:icon="@drawable/ic_info_black_24dp"
-        android:title="@string/pref_location_title_header">
+        android:title="@string/pref_general_title_header">
         <extra android:name="settings" android:value="prefs_general" ></extra>
     </header>
 

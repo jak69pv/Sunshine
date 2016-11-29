@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="pref_units_values">
+        <item>@string/unit_metric_value</item>
+        <item>@string/unit_imperial_value</item>
+    </string-array>
+
+    <string-array name="pref_units_options">
+        <item>@string/unit_metric</item>
+        <item>@string/unit_imperial</item>
+    </string-array>
+</resources>
