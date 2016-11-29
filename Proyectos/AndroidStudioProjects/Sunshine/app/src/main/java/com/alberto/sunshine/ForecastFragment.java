@@ -1,9 +1,12 @@
 package com.alberto.sunshine;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,7 +64,7 @@ public class ForecastFragment extends android.app.Fragment {
                         R.id.list_item_forecast_textview
                 );
         // Buscamos la referencia al list view
-        ListView forecastListView = (ListView) rootView.findViewById(R.id.listview_forecast);
+        final ListView forecastListView = (ListView) rootView.findViewById(R.id.listview_forecast);
         // Introducimos la lista en el listView
         forecastListView.setAdapter(forecastAdapter);
         forecastListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -72,12 +74,18 @@ public class ForecastFragment extends android.app.Fragment {
                 // pedir primero la actividad
                 Context context = getActivity().getApplicationContext();
                 String forecast = forecastAdapter.getItem(position);
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(context, forecast, duration);
-                toast.show();
+                Intent detailIntent = new Intent(context, DetailActivity.class)
+                        .putExtra(Intent.EXTRA_TEXT, forecast);
+                startActivity(detailIntent);
             }
         });
+
+        // Hilo que ejecutara en segundo plano el estado del tiempo actual
+        FetchWeatherTask weatherTask = new FetchWeatherTask();
+        // Sacamos de las preferencias
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        String location = prefs.getString(getString(R.string.pref_location_key), "46340,es");
+        weatherTask.execute(location);
 
         return rootView;
     }
@@ -95,8 +103,14 @@ public class ForecastFragment extends android.app.Fragment {
             case R.id.action_refresh:
                 // Hilo que ejecutara en segundo plano el estado del tiempo actual
                 FetchWeatherTask weatherTask = new FetchWeatherTask();
-                weatherTask.execute("94043");
+                // Sacamos de las preferencias
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+                String location = prefs.getString(getString(R.string.pref_location_key), "46340,es");
+                weatherTask.execute(location);
                 return true;
+            //case R.id.action_settings:
+            //    Intent settingsIntent = new Intent(getActivity(), SettingsActivity.class);
+            //    startActivity(settingsIntent);
             default:
                 return super.onOptionsItemSelected(item);
         }
