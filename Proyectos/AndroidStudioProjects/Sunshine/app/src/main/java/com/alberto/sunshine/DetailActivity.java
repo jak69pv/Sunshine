@@ -18,6 +18,8 @@ package com.alberto.sunshine;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,14 +27,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import static android.support.v4.view.MenuItemCompat.getActionProvider;
+
 public class DetailActivity extends AppCompatActivity {
+
+
+    private static final String LOG_TAG = DetailFragment.class.getSimpleName();
+    private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.activity_detail, new PlaceholderFragment())
+                    .add(R.id.activity_detail, new DetailFragment())
                     .commit();
         }
         // Añade el botón de navegacion hacia atras. Por defecto es true
@@ -44,6 +54,7 @@ public class DetailActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.detail, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -51,16 +62,44 @@ public class DetailActivity extends AppCompatActivity {
             case R.id.action_settings:
                 Intent settingsIntent = new Intent(this, SettingsActivity.class);
                 startActivity(settingsIntent);
+                 return true;
+             case R.id.action_share:
+                ShareActionProvider mShareActionProvider = (ShareActionProvider) getActionProvider(item);
+                TextView tw = (TextView) findViewById(R.id.detail_text);
+                String textToSend = tw.getText() + FORECAST_SHARE_HASHTAG;
+
+                if (mShareActionProvider != null) {
+                    mShareActionProvider.setShareIntent(createShareForecastIntent(textToSend));
+                } else {
+                    Log.d(LOG_TAG, "Share Action Provider is null");
+                }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
 
         }
     }
+
+
+    private Intent createShareForecastIntent(String textToShare) {
+        Intent shareIntent = new Intent()
+                .addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
+                .setAction(Intent.ACTION_SEND)
+                .putExtra(Intent.EXTRA_TEXT, textToShare)
+                .setType("text/plain");
+
+        return shareIntent;
+    }
+
+
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends android.app.Fragment {
-        public PlaceholderFragment() {
+    public static class DetailFragment extends android.app.Fragment {
+
+
+        public DetailFragment() {
+            setHasOptionsMenu(true);
         }
 
         @Override
@@ -70,12 +109,13 @@ public class DetailActivity extends AppCompatActivity {
 
             Intent intent = getActivity().getIntent();
             if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-                String forecastText = intent.getStringExtra(Intent.EXTRA_TEXT);
+                String forecastStr = intent.getStringExtra(Intent.EXTRA_TEXT);
                 TextView textView = (TextView) rootView.findViewById(R.id.detail_text);
                 //textView.setTextSize(40);
-                textView.setText(forecastText);
+                textView.setText(forecastStr);
             }
             return rootView;
         }
+
     }
 }

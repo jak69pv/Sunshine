@@ -5,7 +5,12 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         app:showAsAction="never"/>
     <item android:id="@+id/action_settings"
-        android:title="@string/settings_menu"
+        android:title="@string/action_settings"
+        android:orderInCategory="100"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
+    <item android:id="@+id/action_map"
+        android:title="@string/action_map"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:showAsAction="never" />
 </menu>

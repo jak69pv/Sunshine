@@ -6,8 +6,10 @@
     <string name="max_temp">21º</string>
     <string name="min_temp">8</string>
     <string name="action_settings">Settings</string>
+    <string name="action_map">Map location</string>
     <string name="refresh_menu" translatable="false">Refresh</string>
     <string name="settings_menu">Settings</string>
+    <string name="share_menu">Share</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -31,6 +33,8 @@
     <string name="unit_imperial_value" translatable="false">imperial</string>
 
     <!-- Key name for storing settings in SharedPreferences [CHAR LIMIT=NONE] -->
+    <string name="pref_location_wiew_location" translatable="false">Current Location</string>
+    <string name="pref_location_view_key" translatable="false">current_location</string>
     <string name="pref_location_key" translatable="false">location</string>
     <string name="pref_units_key" translatable="false">units</string>
 

@@ -34,6 +34,7 @@ import java.util.ArrayList;
 
 public class ForecastFragment extends android.app.Fragment {
 
+
     //Lista donde va la info a poner
     private ArrayAdapter<String> forecastAdapter;
 
@@ -96,16 +97,13 @@ public class ForecastFragment extends android.app.Fragment {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_refresh:
-
                 updateWeather();
                 return true;
-            //case R.id.action_settings:
-            //    Intent settingsIntent = new Intent(getActivity(), SettingsActivity.class);
-            //    startActivity(settingsIntent);
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
 
     // Funcion que se ejecuta en cuanto esta lista la actividad
     @Override
