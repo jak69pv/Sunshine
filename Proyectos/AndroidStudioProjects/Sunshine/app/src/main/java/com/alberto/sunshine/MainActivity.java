@@ -12,20 +12,33 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity {
 
     private final String LOG_TAG = ForecastFragment.class.getSimpleName();
+    private final String FORECASTFRAGMENT_TAG = "FFTAG";
+
+    private String mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mLocation = Utility.getPreferredLocation(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.activity_main, new ForecastFragment())
+                    .add(R.id.activity_main, new ForecastFragment(), FORECASTFRAGMENT_TAG)
                     .commit();
         }
 
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mLocation != Utility.getPreferredLocation(this)) {
+            ForecastFragment ff = (ForecastFragment)getFragmentManager()
+                    .findFragmentByTag(FORECASTFRAGMENT_TAG);
+            ff.onLocationChanged();
+            mLocation = Utility.getPreferredLocation(this);
+        }
+    }
 
     //Opciones del menu que dependen de la propia actividad
      @Override
