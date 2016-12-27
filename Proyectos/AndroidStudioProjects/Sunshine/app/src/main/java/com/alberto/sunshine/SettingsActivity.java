@@ -104,6 +104,7 @@ public class SettingsActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // setTheme(R.style.SettingsTheme);
         super.onCreate(savedInstanceState);
         setupActionBar();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -121,6 +122,12 @@ public class SettingsActivity
             // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    public Intent getParentActivityIntent() {
+        return super.getParentActivityIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     }
 
     /**
@@ -196,7 +203,7 @@ public class SettingsActivity
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
-            setHasOptionsMenu(true);
+            // setHasOptionsMenu(true);
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_units_key)));
         }
 
@@ -221,7 +228,7 @@ public class SettingsActivity
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_location);
-            setHasOptionsMenu(true);
+            // setHasOptionsMenu(true);
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_key)));
         }
 

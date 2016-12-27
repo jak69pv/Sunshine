@@ -140,12 +140,19 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
             JSONObject forecastJson = new JSONObject(forecastJsonStr);
             JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
 
+
             JSONObject cityJson = forecastJson.getJSONObject(OWM_CITY);
             String cityName = cityJson.getString(OWM_CITY_NAME);
 
-            JSONObject cityCoord = cityJson.getJSONObject(OWM_COORD);
-            double cityLatitude = cityCoord.getDouble(OWM_LATITUDE);
-            double cityLongitude = cityCoord.getDouble(OWM_LONGITUDE);
+            double cityLatitude, cityLongitude;
+            if(cityJson.has(OWM_COORD)) {
+                JSONObject cityCoord = cityJson.getJSONObject(OWM_COORD);
+                cityLatitude = cityCoord.getDouble(OWM_LATITUDE);
+                cityLongitude = cityCoord.getDouble(OWM_LONGITUDE);
+            } else {
+                cityLatitude = cityJson.getDouble(OWM_LATITUDE);
+                cityLongitude = cityJson.getDouble(OWM_LONGITUDE);
+            }
 
             long locationId = addLocation(locationSetting, cityName, cityLatitude, cityLongitude);
 

@@ -6,6 +6,7 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
@@ -28,6 +29,7 @@ public class DetailFragment extends android.app.Fragment
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = DetailFragment.class.getSimpleName();
+    static final String DETAIL_URI = "URI";
 
     private static ShareActionProvider mShareActionProvider;
     private static String mForecast;
@@ -73,6 +75,8 @@ public class DetailFragment extends android.app.Fragment
     private TextView mWindView;
     private TextView mPressureView;
 
+    private Uri mUri;
+
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -82,6 +86,11 @@ public class DetailFragment extends android.app.Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+
+        Bundle arguments = getArguments();
+        if(arguments != null) {
+            mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
+        }
 
         mIconView = (ImageView) rootView.findViewById(R.id.detail_icon);
         mDateView = (TextView) rootView.findViewById(R.id.detail_date_textview);
@@ -104,20 +113,22 @@ public class DetailFragment extends android.app.Fragment
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Log.v(LOG_TAG, "In onCreateLoader");
-        Intent intent = getActivity().getIntent();
-        if (intent == null) {
-            return null;
-        }
 
-        return new CursorLoader(
-                getActivity(),
-                intent.getData(),
-                DETAIL_COLUMNS,
-                null,
-                null,
-                null
-        );
+        if (null != mUri) {
+            // Now create and return a CursorLoader that will take care of
+            // reating a Cursor for the data being displayed.
+
+            return new CursorLoader(
+                    getActivity(),
+                    mUri,
+                    DETAIL_COLUMNS,
+                    null,
+                    null,
+                    null
+            );
+        }
+        return null;
+
     }
 
     @Override
@@ -131,7 +142,7 @@ public class DetailFragment extends android.app.Fragment
         // Read weather condition ID from cursor
         int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
         // Use placeholder image
-        mIconView.setImageResource(R.mipmap.ic_launcher);
+        mIconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
 
         // Read date from cursor and update view for day of week and date
         long date = data.getLong(COL_WEATHER_DATE);
@@ -143,6 +154,9 @@ public class DetailFragment extends android.app.Fragment
         // Read description from cursor and update view
         String description = data.getString(COL_WEATHER_DESC);
         mDescriptionView.setText(description);
+
+        // For acccesibility, add a content descriptin to the icon field
+        mIconView.setContentDescription(description);
 
         // Read high and low temperature from cursor and update view
         boolean isMetric = Utility.isMetric(getActivity());
@@ -204,4 +218,19 @@ public class DetailFragment extends android.app.Fragment
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    void onLocationChanged( String newLocation ) {
+        // replace the uri, since the location has changed
+        Uri uri = mUri;
+        if(null != mUri) {
+            long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
+            Uri updateUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
+                    newLocation, date
+            );
+            mUri = updateUri;
+            getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
+        }
+
+    }
+
 }
