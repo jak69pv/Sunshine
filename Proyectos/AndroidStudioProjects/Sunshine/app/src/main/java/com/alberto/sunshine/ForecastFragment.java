@@ -1,14 +1,11 @@
 package com.alberto.sunshine;
 
 import android.app.LoaderManager;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.alberto.sunshine.data.WeatherContract;
+import com.alberto.sunshine.sync.SunshineSyncAdapter;
 
 public class ForecastFragment extends android.app.Fragment
             implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -223,13 +221,7 @@ public class ForecastFragment extends android.app.Fragment
     }
 
     private void updateWeather() {
-        // Hilo que ejecutara en segundo plano el estado del tiempo actual
-        Context context = getActivity().getApplicationContext();
-        FetchWeatherTask weatherTask = new FetchWeatherTask(context);
-        // Sacamos de las preferencias
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-        String location = prefs.getString(getString(R.string.pref_location_key), "46340,es");
-        weatherTask.execute(location);
+        SunshineSyncAdapter.syncImmediately(getActivity());
     }
 
     void onLocationChanged() {
