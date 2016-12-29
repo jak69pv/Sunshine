@@ -160,8 +160,8 @@ public class DetailFragment extends android.app.Fragment
 
         // Read high and low temperature from cursor and update view
         boolean isMetric = Utility.isMetric(getActivity());
-        String highString = Utility.formatTemperature(context, data.getDouble(COL_WEATHER_MAX_TEMP), isMetric);
-        String lowString = Utility.formatTemperature(context, data.getDouble(COL_WEATHER_MIN_TEMP), isMetric);
+        String highString = Utility.formatTemperature(context, data.getDouble(COL_WEATHER_MAX_TEMP));
+        String lowString = Utility.formatTemperature(context, data.getDouble(COL_WEATHER_MIN_TEMP));
         mHighTempView.setText(highString);
         mLowTempView.setText(lowString);
 
